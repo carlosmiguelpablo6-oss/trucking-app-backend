@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+     provider = "prisma-client-js"
+   }
+
+datasource db {
+     provider = "postgresql"
+   }
+
+
+enum Role {
+  CUSTOMER
+  DRIVER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CUSTOMER)
+  isActive  Boolean  @default(true)
+  fcmToken  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  customerBookings  Booking[]  @relation("CustomerBookings")
+  driverBookings    Booking[]  @relation("DriverBookings")
+}
+
+enum TruckStatus {
+  AVAILABLE
+  ON_TRIP
+  MAINTENANCE
+}
+
+model Truck {
+  id           String      @id @default(uuid())
+  plateNumber  String      @unique
+  model        String
+  capacityKg   Int
+  status       TruckStatus @default(AVAILABLE)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  bookings     Booking[]
+}
+
+enum BookingStatus {
+  PENDING
+  ASSIGNED
+  IN_TRANSIT
+  COMPLETED
+  CANCELLED
+}
+
+model Booking {
+  id                     String        @id @default(uuid())
+  customerId             String
+  customer               User          @relation("CustomerBookings", fields: [customerId], references: [id])
+  driverId               String?
+  driver                 User?         @relation("DriverBookings", fields: [driverId], references: [id])
+  truckId                String
+  truck                  Truck         @relation(fields: [truckId], references: [id])
+  cargoDescription       String
+  cargoWeightKg          Int
+  itemCount              Int           @default(1)
+  pickupLocation         String
+  dropoffLocation        String
+  scheduledDate          DateTime
+  status                 BookingStatus @default(PENDING)
+  estimatedCost          Float?
+  actualCost             Float?
+  proofOfDeliveryUrl     String?
+  rating                 Int?
+  reviewComment          String?
+  lastLatitude           Float?
+  lastLongitude          Float?
+  lastLocationUpdatedAt  DateTime?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+}
