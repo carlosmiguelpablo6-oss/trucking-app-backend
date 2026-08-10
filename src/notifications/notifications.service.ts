@@ -12,12 +12,13 @@ export class NotificationsService implements OnModuleInit {
 
   onModuleInit() {
     if (getApps().length === 0) {
-      initializeApp({
-        credential: cert(
-          path.join(process.cwd(), 'firebase-service-account.json'),
-        ),
-      });
+      const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
 
+      const credential = serviceAccountJson
+        ? cert(JSON.parse(serviceAccountJson))
+        : cert(path.join(process.cwd(), 'firebase-service-account.json'));
+
+      initializeApp({ credential });
       this.logger.log('Firebase Admin initialized');
     }
   }
