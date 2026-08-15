@@ -32,6 +32,14 @@ export class NotificationsService implements OnModuleInit {
     this.logger.log(`FCM token saved for user ${userId}`);
   }
 
+  async sendToAllAdmins(title: string, body: string) {
+    const admins = await this.prisma.user.findMany({
+      where: { role: 'ADMIN', fcmToken: { not: null } },
+      select: { id: true },
+    });
+    await Promise.all(admins.map((admin) => this.sendToUser(admin.id, title, body)));
+  }
+
   async sendToUser(userId: string, title: string, body: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
