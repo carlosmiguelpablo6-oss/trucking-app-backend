@@ -147,7 +147,7 @@ export class BookingsService {
     'Trip Started',
     'Your Delivery is now on its way!'
    );
-   await this.notifications,sendToAllAdmins (
+   await this.notifications.sendToAllAdmins (
     'Trip Started',
     'A driver has started a delivery trip',
    );
