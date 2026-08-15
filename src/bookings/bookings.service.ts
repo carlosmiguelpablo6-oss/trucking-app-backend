@@ -75,6 +75,10 @@ export class BookingsService {
           'Booking Confirmed',
           `Your booking for ${dto.cargoDescription} has been submitted.`,
         );
+        await this.notifications.sendToAllAdmins(
+          'New Booking',
+          `A new booking for ${dto.cargoDescription} needs a driver.`,
+        );
 
         return booking;
   }
@@ -143,6 +147,10 @@ export class BookingsService {
     'Trip Started',
     'Your Delivery is now on its way!'
    );
+   await this.notifications,sendToAllAdmins (
+    'Trip Started',
+    'A driver has started a delivery trip',
+   );
 
     return updatedBooking;
   }
@@ -191,6 +199,10 @@ export class BookingsService {
       updatedBooking.customerId,
       'Delivery Completed',
       'Your delivery has arrived at its destination',
+    );
+    await this.notifications.sendToAllAdmins(
+      'Delivery Completed',
+      `A trip has been marked as completed.`,
     );
 
     return updatedBooking;
