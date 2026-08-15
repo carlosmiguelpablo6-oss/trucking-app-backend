@@ -71,16 +71,12 @@ export class BookingsService {
         });
 
         await this.notifications.sendToUser(
-         customerId,
-         'Booking Confirmed',
-         `Your booking for ${dto.cargoDescription} has been submitted.`,
-       );
-       await this.notifications.sendToAllAdmins(
-         'New Booking',
-         `A new booking for ${dto.cargoDescription} needs a driver.`,
-       );
+          customerId,
+          'Booking Confirmed',
+          `Your booking for ${dto.cargoDescription} has been submitted.`,
+        );
 
-       return booking;
+        return booking;
   }
 
   async getAdminStats() {
@@ -145,14 +141,11 @@ export class BookingsService {
    await this.notifications.sendToUser(
     updatedBooking.customerId,
     'Trip Started',
-    `Your delivery is now on its way!`,
-  );
-  await this.notifications.sendToAllAdmins(
-    'Trip Started',
-    `A driver has started a delivery trip.`,
-  );
+    'Your Delivery is now on its way!'
+   );
 
-  return updatedBooking;
+    return updatedBooking;
+  }
 
   async endTrip(bookingId: string, driverId: string, actualCost?: number, proofPhoto?: { buffer: Buffer; mimeType: string },) {
     const booking = await this.prisma.booking.findUnique({ where: { id: bookingId } });
@@ -196,15 +189,12 @@ export class BookingsService {
 
     await this.notifications.sendToUser(
       updatedBooking.customerId,
-        Delivery Completed',
-      `Your delivery has arrived at its destination.`,
-    );
-    await this.notifications.sendToAllAdmins(
       'Delivery Completed',
-      `A trip has been marked as completed.`,
+      'Your delivery has arrived at its destination',
     );
 
     return updatedBooking;
+  }
 
   async getBookedDates(truckId: string) {
     const bookings = await this.prisma.booking.findMany({
