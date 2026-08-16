@@ -338,9 +338,9 @@ export class BookingsService {
     const dateFilter =
       startDate || endDate
         ? {
-            createdAt: {
+            scheduledDate: {
               ...(startDate && { gte: new Date(startDate) }),
-              ...(endDate && { lte: new Date(endDate) }),
+              ...(endDate && { lt: new Date(endDate) }),
             },
           }
         : {};
@@ -359,7 +359,7 @@ export class BookingsService {
       this.prisma.booking.count({ where: { ...dateFilter, status: 'ASSIGNED' } }),
       this.prisma.booking.count({ where: { ...dateFilter, status: 'IN_TRANSIT' } }),
       this.prisma.booking.count({ where: { ...dateFilter, status: 'COMPLETED' } }),
-      this.prisma.booking.count({ where: { ...dateFilter, status: 'CANCELLED' } }),
+    this.prisma.booking.count({ where: { ...dateFilter, status: 'CANCELLED' } }),
       this.prisma.booking.aggregate({
         where: { ...dateFilter, status: 'COMPLETED' },
         _sum: { actualCost: true, estimatedCost: true },
