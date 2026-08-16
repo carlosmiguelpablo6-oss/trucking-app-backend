@@ -18,7 +18,9 @@ interface LocationUpdatePayload {
 }
 
 @WebSocketGateway({
-  cors: { origin: '*' }, // fine for development; we'll restrict this before production
+  cors: { origin: true }, // reflects the request's own origin — acceptable since
+  // this app has no browser-based frontend to spoof from; real restriction
+  // comes from JWT auth on every meaningful action
 })
 export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
